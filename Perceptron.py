@@ -54,8 +54,8 @@ class Perceptron:
 			if abs(prediction - labels[i]) < self.float_threshold:
 				num_correct += 1.0 
 			elif verbose:
-				print('Perceptron failed on example' + str(examples[i]) + '\nPredicted: ' + str(prediction) + ' Correct Output: ' + str(labels[i]))
-
+				#print('Perceptron failed on example' + str(examples[i]) + '\nPredicted: ' + str(prediction) + ' Correct Output: ' + str(labels[i]))
+				print(end="")
 		return num_correct / len(examples)
 
 	def activateNOT(self, inputs: float) -> float:
@@ -75,7 +75,7 @@ class Perceptron:
 				num_correct += 1.0
 			elif verbose:
 				# print('Perceptron failed on example' + str(examples[i]) + '\nPredicted: ' + str(prediction) + ' Correct Output: ' + str(labels[i]))
-				print()
+				print(end="")
 		return num_correct / len(examples)
 
 	def learnNOT(self, index: int, output: float, target_output: float, x: float, learning_rate: float):
