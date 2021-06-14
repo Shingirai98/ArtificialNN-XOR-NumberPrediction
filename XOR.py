@@ -99,8 +99,7 @@ def AND_P():
         i += 1
 
         AND.train(training_examples, training_labels, 0.2)  # Train our Perceptron
-		# print('------ Iteration ' + str(i) + ' ------')
-		# print(AND.weights)
+
         valid_percentage = AND.validate(validate_examples, validate_labels, verbose=True)  # Validate it
 		# print(valid_percentage)
 
@@ -163,12 +162,29 @@ print("Constructing Network...")
 C = AND.activate([A, B])
 D = OR.activate([A, B])
 E = NOT.activateNOT(C)
-XOR_Output =  AND.activate([E, D])
-
+XOR_Output = AND.activate([E, D])
 print("AND weights:", AND.weights)
-print("AND-Out:", C)
 print("OR weights:", OR.weights)
-print("OR-Out:", D)
-print("NOT weight:", NOT.weights)
-print("Not-Out:", E)
-print("Output:", AND.activate([E, D]))
+print("NOT weights:", NOT.weights)
+print("Done!")
+A_B = ""
+while True:
+    A_B = input(("Please enter two inputs:\n"))
+    if A_B == "exit":
+        break
+    A = eval(A_B.split(" ")[0])
+    B = eval(A_B.split(" ")[1])
+    C = AND.activate([A, B])
+    D = OR.activate([A, B])
+    E = NOT.activateNOT(C)
+    XOR_Output = AND.activate([E, D])
+    print("XOR Gate:", int(XOR_Output))
+
+print("Exiting...")
+# print("AND weights:", AND.weights)
+# print("AND-Out:", C)
+# print("OR weights:", OR.weights)
+# print("OR-Out:", D)
+# print("NOT weight:", NOT.weights)
+# print("Not-Out:", E)
+# print("Output:", AND.activate([E, D]))
