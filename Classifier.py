@@ -123,3 +123,17 @@ def inference(path, model, device):
     with torch.no_grad():
         pred = model(torch.unsqueeze(T(x), axis=0).float().to(device))
         return F.softmax(pred, dim=-1).cpu().numpy()
+
+path = "https://previews.123rf.com/images/aroas/aroas1704/aroas170400068/79321959-handwritten-sketch-black-number-8-on-white-background.jpg"
+r = requests.get(path)
+with BytesIO(r.content) as f:
+    img = Image.open(f).convert(mode="L")
+    img = img.resize((28, 28))
+x = (255 - np.expand_dims(np.array(img), -1))/255.
+
+plt.imshow(x.squeeze(-1), cmap="gray")
+
+pred = inference(path, lenet, device="cpu")
+pred_idx = np.argmax(pred)
+print(f"Predicted: {pred_idx}, Prob: {pred[0][pred_idx]*100} %")
+print(pred)
