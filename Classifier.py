@@ -109,3 +109,17 @@ def predict_dl(model, data):
         y_pred.extend(list(pred.numpy()))
         y_true.extend(list(labels.numpy()))
     return np.array(y_pred), np.array(y_true)
+
+
+y_pred, y_true = predict_dl(lenet, val_data_loader)
+pd.DataFrame(confusion_matrix(y_true, y_pred, labels=np.arange(0,10)))
+
+def inference(path, model, device):
+    r = requests.get(path)
+    with BytesIO(r.content) as f:
+        img = Image.open(f).convert(mode="L")
+        img = img.resize((28, 28))
+        x = (255 - np.expand_dims(np.array(img), -1))/255.
+    with torch.no_grad():
+        pred = model(torch.unsqueeze(T(x), axis=0).float().to(device))
+        return F.softmax(pred, dim=-1).cpu().numpy()
