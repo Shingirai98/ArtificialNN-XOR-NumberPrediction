@@ -95,3 +95,17 @@ def train(epochs = 3, learning_rate = 1e-3, device="cpu"):
     return best_model
 
 lenet = train(5, "cpu")
+
+
+torch.save(lenet.state_dict(), "model.pth")
+def predict_dl(model, data):
+    y_pred = []
+    y_true = []
+    for i, (images, labels) in enumerate(data):
+        images = images.cpu()
+        x = model(images)
+        value, pred = torch.max(x, 1)
+        pred = pred.data.cpu()
+        y_pred.extend(list(pred.numpy()))
+        y_true.extend(list(labels.numpy()))
+    return np.array(y_pred), np.array(y_true)
