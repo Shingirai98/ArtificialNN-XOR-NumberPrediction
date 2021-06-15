@@ -53,3 +53,45 @@ def create_lenet():
     )
     return model
 
+
+def validate_model(model, data):
+    total = 0
+    correct = 0
+    for i, (images, labels) in enumerate(data):
+        images = images.to("cpu") # might skip this
+        x = model(images)
+        value, pred = torch.max(x, 1)
+        pred = pred.data.cpu()
+        total += x.size(0)
+        correct += torch.sum(pred == labels)
+
+    return correct/total
+
+
+def train(epochs = 3, learning_rate = 1e-3, device="cpu"):
+    cnn = create_lenet().to(device)
+    accuracies = []
+    cec = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(cnn.parameters(), lr=1e-3)
+    max_accuracy = 0
+
+    for epoch in range(epochs):
+        for i, (images, labels) in enumerate (train_data_loader):
+            images = images.to(device)
+            labels = labels.to(device)
+            optimizer.zero_grad()
+            pred = cnn(images)
+            loss = cec(pred, labels)
+            loss.backward()
+            optimizer.step()
+        accuracy = float(validate_model(cnn, val_data_loader))
+        accuracies.append(accuracy)
+        if accuracy > max_accuracy:
+            best_model = copy.deepcopy(cnn)
+            max_accuracy = accuracy
+            print("Saving best model with Accuracy: ", accuracy)
+        print("Epoch:", epoch+1, "Accuracy: ",accuracy)
+    plt.plot(accuracies)
+    return best_model
+
+lenet = train(5, "cpu")
